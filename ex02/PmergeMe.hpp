@@ -20,6 +20,10 @@ class PmergeMe
    
         void loadVector(int argc, char **argv);
         void loadDeque(int argc, char **argv);
+        void makeVectorPairs(
+            std::vector<std::pair<int, int> > &pairs,
+            bool &hasStraggler,
+            int &straggler) const;
     
     public:
         PmergeMe();
