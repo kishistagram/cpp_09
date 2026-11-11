@@ -24,6 +24,8 @@ class PmergeMe
    
         void loadVector(int argc, char **argv);
         void loadDeque(int argc, char **argv);
+
+		// vector
         void makeVectorPairs(
             std::vector<std::pair<int, int> > &pairs,
             bool &hasStraggler,
@@ -31,6 +33,9 @@ class PmergeMe
     	static void fordJohnsonVector(
         	std::vector<int> &data,
         	std::size_t groupSize);
+		//　共通関数でOK
+		static std::vector<std::size_t>PmergeMe::generateJacobsthalOrder(
+			std::size_t count);
     
     public:
         PmergeMe();

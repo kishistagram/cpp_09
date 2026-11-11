@@ -261,7 +261,7 @@ static void appendGroup(
 
 // pending[0] corresponds to b2.
 // Example: b3, b2, b5, b4, ...
-static std::vector<std::size_t> insertionOrder(
+std::vector<std::size_t>PmergeMe::generateJacobsthalOrder(
     std::size_t count)
 {
     std::vector<std::size_t> order;
@@ -380,7 +380,7 @@ void PmergeMe::fordJohnsonVector(
     // --------------------------------------------------------
 
     const std::vector<std::size_t> order =
-        insertionOrder(pending.size());
+        generateJacobsthalOrder(pending.size());
 
     for (std::size_t j = 0; j < order.size(); ++j)
     {
