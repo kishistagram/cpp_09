@@ -10,6 +10,10 @@
 #include <list>
 #include <deque>
 #include <vector>
+#include <cstddef>
+
+
+
 
 
 class PmergeMe
@@ -24,6 +28,9 @@ class PmergeMe
             std::vector<std::pair<int, int> > &pairs,
             bool &hasStraggler,
             int &straggler) const;
+    	static void fordJohnsonVector(
+        	std::vector<int> &data,
+        	std::size_t groupSize);
     
     public:
         PmergeMe();

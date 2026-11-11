@@ -1,12 +1,22 @@
-name = PmergeMe
+NAME = PmergeMe
 
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -pedantic-errors -std=c++98
 
+DEBUG ?= 0
+
+ifeq ($(DEBUG),1)
+	CXXFLAGS += -DPMERGEME_DEBUG
+endif
+
 SRCS = main.cpp \
-	   PmergeMe
-OBJS = $(SRC:.cpp=.o)
-HEADERS = PmergeMe.hpp
+	   PmergeMe.cpp \
+	   ComparisonReport.cpp
+
+OBJS = $(SRCS:.cpp=.o)
+
+HEADERS = PmergeMe.hpp \
+		  ComparisonReport.hpp
 
 RM = rm -f
 
@@ -21,10 +31,13 @@ $(NAME): $(OBJS)
 clean:
 	$(RM) $(OBJS)
 
-fclean:
+fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+debug: $(MAKE) re DEBUG=1
+
 
 .PHONY: all clean fclean re
 
