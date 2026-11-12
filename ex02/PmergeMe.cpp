@@ -1,152 +1,3 @@
-// #include "PmergeMe.hpp"
-
-
-// // 共通のもの
-// static int parsePositiveInt(const char *str)
-// {
-//     if (*str == '\0')
-//         throw std::runtime_error("empty argument");
-    
-//     int value = 0;
-
-//     for (int i = 0; str[i] != '\0'; ++i)
-//     {
-//         if (str[i] < '0' || str[i] > '9')
-//             throw std::runtime_error("invalid positive integer");
-        
-//         int digit = str[i] - '0';
-
-//         if (value > (INT_MAX - digit) / 10)
-//             throw std::runtime_error("integer overflow");
-        
-//         value = value * 10 + digit;
-//     }
-//     if (value == 0)
-//         throw std::runtime_error("integet must be positive");
-//     return value;
-// }
-// // constructor & destructor
-// PmergeMe::PmergeMe() {}
-
-// PmergeMe::PmergeMe(const PmergeMe &other)
-//     : _vector(other._vector), _deque(other._deque)
-// {
-// }
-
-// PmergeMe &PmergeMe::operator=(const PmergeMe &other)
-// {
-//     if (this != &other)
-//     {
-//         _vector = other._vector;
-//         _deque = other._deque;
-//     }
-//     return *this;
-// }
-
-// PmergeMe::~PmergeMe() {}
-
-// void PmergeMe::loadVector(int argc, char **argv)
-// {
-//     _vector.clear();
-
-//     for (int i = 1; i < argc; ++i)
-//         _vector.push_back(parsePositiveInt(argv[i]));
-
-// }
-
-// // private func
-// void PmergeMe::loadDeque(int argc, char **argv)
-// {
-//     _deque.clear();
-
-//     for (int i = 1; i < argc; ++i)
-//         _deque.push_back(parsePositiveInt(argv[i]));
-// }
-
-// void fordJohnsonVector(/*要素のグループ*/)
-// {
-// 	if ( 要素数 <= 1)
-// 		return;
-
-// 	// 1. creating pairs
-// 	// 2. compare large/small in pairs
-// 	// 3. large number groups -> recursive sort
-// 	fordJohnsonVector(/* large group*/);
-
-// 	// 4. return from recursive
-// 	// 5. main chainを構築
-// 	// 6. pending をJacobthal順に挿入
-// }
-
-// // ２個ずつ取り出す　-> 大小を比較　-> ペアとして保存
-// void PmergeMe::makeVectorPairs(
-//     std::vector<std::pair<int, int> > &pairs,
-//     bool &hasStraggler,
-//     int &straggler) const
-// {
-//     pairs.clear();
-//     hasStraggler = false;
-//     straggler = 0;
-
-//     std::vector<int>::size_type i = 0;
-
-//     while (i + 1 < _vector.size())
-//     {
-//         int smaller = _vector[i];
-//         int larger  = _vector[i + 1];
-
-//         if (smaller > larger)
-//             std::swap(smaller, larger);
-        
-//         pairs.push_back(std::make_pair(smaller, larger));
-//         i += 2;
-//     }
-//     if (i < _vector.size())
-//     {
-//         hasStraggler = true;
-//         straggler = _vector[i];
-//     }
-// }
-
-// void PmergeMe::run(int argc, char **argv)
-// {
-//     if (argc < 2)
-//         throw std::runtime_error("provide positve integer");
-
-//     loadVector(argc, argv);
-//     loadDeque(argc, argv);
-
-//     // 確認用
-//     std::cout << "Vector: ";
-//     for (std::vector<int>::size_type i = 0; i < _deque.size(); ++i)
-//         std::cout << " " << _vector[i];
-//     std::cout << std::endl;
-
-//     std::cout << "Deque: ";
-//     for (std::deque<int>::size_type i = 0; i < _deque.size(); ++i)
-//         std::cout << " " << _deque[i];
-//     std::cout << std::endl;
-    
-//     std::vector<std::pair<int, int> > pairs;
-//     bool hasStraggler;
-//     int straggler;
-
-//     makeVectorPairs(pairs, hasStraggler, straggler);
-
-//     std::cout << "Pairs:";
-//     for (std::vector<std::pair<int, int> >::size_type i = 0;
-//         i < pairs.size(); ++i)
-//     {
-//         std::cout << " (" << pairs[i].first 
-//             << ", " << pairs[i].second << ")";
-//     }
-//     std::cout << std::endl;
-    
-//     if (hasStraggler)
-//         std::cout << "Straggler: " << straggler << std::endl;
-// }
-
-
 #include "PmergeMe.hpp"
 
 #include <iostream>
@@ -154,6 +5,10 @@
 #include <climits>
 #include <algorithm>
 #include <utility>
+
+
+#define RED   "\033[0;31m"
+#define RESET "\033[0m"
 
 // ============================================================
 // Input validation
@@ -308,9 +163,12 @@ void PmergeMe::fordJohnsonVector(
     std::vector<int> &data,
     std::size_t groupSize)
 {
-    const std::size_t full = data.size() / groupSize;
+    const std::size_t groupCount = data.size() / groupSize;
 
-    if (full < 2)
+    // debug
+    std::cout << RED << "<<debug>> groupCount: "
+              << groupCount << RESET << std::endl; 
+    if (groupCount < 2)
         return;
 
     // --------------------------------------------------------
@@ -318,7 +176,7 @@ void PmergeMe::fordJohnsonVector(
     //    Swap entire groups, not individual elements.
     // --------------------------------------------------------
 
-    for (std::size_t p = 0; p + 1 < full; p += 2)
+    for (std::size_t p = 0; p + 1 < groupCount; p += 2)
     {
         const std::size_t left = p * groupSize;
         const std::size_t right = (p + 1) * groupSize;
@@ -348,15 +206,15 @@ void PmergeMe::fordJohnsonVector(
     //    Build main chain and pending groups.
     // --------------------------------------------------------
 
-    const std::size_t pairCount = full / 2;
-    const bool oddGroup = (full % 2) != 0;
+    const std::size_t pairCount = groupCount / 2;
+    const bool oddGroup = (groupCount % 2) != 0;
 
     const std::size_t completePrefix =
-        full * groupSize;
+        groupCount * groupSize;
 
     // Store group indices, not copied groups.
     std::vector<std::size_t> chain;
-    chain.reserve(full);
+    chain.reserve(groupCount);
 
     // b1 is always before a1.
     chain.push_back(0);
@@ -373,7 +231,7 @@ void PmergeMe::fordJohnsonVector(
 
     // A complete unpaired group is also pending.
     if (oddGroup)
-        pending.push_back(full - 1);
+        pending.push_back(groupCount - 1);
 
     // --------------------------------------------------------
     // 4. Insert pending in Jacobsthal order.
@@ -390,7 +248,7 @@ void PmergeMe::fordJohnsonVector(
 
         // For b_i, search only before its paired a_i.
         // A straggler has no partner.
-        if (!(oddGroup && id == full - 1))
+        if (!(oddGroup && id == groupCount - 1))
         {
             const std::size_t partner = id + 1;
 
@@ -483,14 +341,36 @@ void PmergeMe::run(int argc, char **argv)
 
     std::cout << std::endl;
 
+    // ソート全体のCPU時間の計測
+    // 計測開始
+    const std::clock_t start = std::clock();
+
     fordJohnsonVector(_vector, 1);
 
+    // 計測停止
+    const std::clock_t end = std::clock();
+
+    /* time in micro second 
+    s  = 1 sec
+    ms = 0.001sec(1/1,000)
+    us = 0.000001sec(1/1000,000) 
+    */
+    const double elapsed =
+        static_cast<double>(end - start)
+        / CLOCKS_PER_SEC * 1000000.0;
+    
     std::cout << "After: ";
 
     for (std::size_t i = 0; i < _vector.size(); ++i)
         std::cout << " " << _vector[i];
 
     std::cout << std::endl;
+
+    std::cout << "Time to process a range of "
+              << _vector.size()
+              << " elements with std::vector : "
+              << elapsed << " us"
+              << std::endl;
 }
 
 

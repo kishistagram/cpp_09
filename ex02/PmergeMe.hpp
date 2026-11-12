@@ -31,7 +31,7 @@ class PmergeMe
         	std::vector<int> &data,
         	std::size_t groupSize);
 		//　共通関数でOK
-		static std::vector<std::size_t>PmergeMe::generateJacobsthalOrder(
+		static std::vector<std::size_t>generateJacobsthalOrder(
 			std::size_t count);
     
     public:
