@@ -1,4 +1,5 @@
 #include "PmergeMe.hpp"
+#include "Debug.hpp"
 
 #include <iostream>
 #include <stdexcept>
@@ -8,6 +9,7 @@
 
 
 #define RED   "\033[0;31m"
+#define GREEN "\033[32m"
 #define RESET "\033[0m"
 
 // ============================================================
@@ -119,6 +121,8 @@ static void appendGroup(
 std::vector<std::size_t>PmergeMe::generateJacobsthalOrder(
     std::size_t count)
 {
+	// debug
+	std::cout << "[JasobsthalOrder running..]" << std::endl;
     std::vector<std::size_t> order;
 
     std::size_t previous = 1;
@@ -166,11 +170,16 @@ void PmergeMe::fordJohnsonVector(
     const std::size_t groupCount = data.size() / groupSize;
 
     // debug
-    std::cout << RED << "<<debug>> groupCount: "
-              << groupCount << RESET << std::endl; 
+    std::cout << RED << "<<debug>>" << RESET << std::endl;
+	std::cout << "[ford-Johnson running..]" << std::endl;
+	std::cout << "groupSize: "
+			  << groupSize << std::endl;
+	std::cout << "groupCount: "
+              << groupCount << std::endl;
+	std::cout << "-------------------------" << std::endl;
+
     if (groupCount < 2)
         return;
-
     // --------------------------------------------------------
     // 1. Compare adjacent groups.
     //    Swap entire groups, not individual elements.
@@ -181,17 +190,32 @@ void PmergeMe::fordJohnsonVector(
         const std::size_t left = p * groupSize;
         const std::size_t right = (p + 1) * groupSize;
 
+		// debug
+		std::cout << "compare: data[" << left << "] & data[" << right << "]" << std::endl;
+
         if (groupMax(data, left, groupSize) >
             groupMax(data, right, groupSize))
         {
             for (std::size_t k = 0; k < groupSize; ++k)
             {
-                std::swap(
-                    data[left + k],
-                    data[right + k]
-                );
+				// debug
+				std::cout << "[BEFORE] "
+                		  << data[left + k] << " <-> "
+                  		  << data[right + k] << std::endl;
+
+                std::swap(data[left + k],data[right + k]);
+
+				// debug
+        		std::cout << "[AFTER]  "
+                  		  << data[left + k] << " <-> "
+                    	  << data[right + k] << std::endl;
             }
         }
+		else
+		{
+			// debug
+			std::cout << "[no swap]" << std::endl;
+		}
     }
 
     // --------------------------------------------------------
@@ -205,6 +229,10 @@ void PmergeMe::fordJohnsonVector(
     // 3. Return from recursion.
     //    Build main chain and pending groups.
     // --------------------------------------------------------
+
+	// debug
+	std::cout << "[RETURN FROM RECURSION] groupSize =" 
+			  << groupSize << std::endl;
 
     const std::size_t pairCount = groupCount / 2;
     const bool oddGroup = (groupCount % 2) != 0;
@@ -220,10 +248,15 @@ void PmergeMe::fordJohnsonVector(
     chain.push_back(0);
 
     // Add all a groups to the main chain.
+	// debug
+	std::cout << "added a groups to the main chain" << std::endl;
     for (std::size_t i = 0; i < pairCount; ++i)
         chain.push_back(2 * i + 1);
 
     // Collect b2, b3, ... as pending.
+	// debug
+	std::cout << "collecetd b as pending" << std::endl;
+
     std::vector<std::size_t> pending;
 
     for (std::size_t i = 1; i < pairCount; ++i)
@@ -231,7 +264,15 @@ void PmergeMe::fordJohnsonVector(
 
     // A complete unpaired group is also pending.
     if (oddGroup)
+	{
+		// debug
+		std::cout << "collected unpaired group as pending" << std::endl;
         pending.push_back(groupCount - 1);
+	}
+
+	//debug
+	debugGroups(data, chain, pending, groupSize);
+
 
     // --------------------------------------------------------
     // 4. Insert pending in Jacobsthal order.
@@ -334,12 +375,12 @@ void PmergeMe::run(int argc, char **argv)
     loadVector(argc, argv);
     loadDeque(argc, argv);
 
-    std::cout << "Before:";
+    std::cout << GREEN << "Before:";
 
     for (std::size_t i = 0; i < _vector.size(); ++i)
         std::cout << " " << _vector[i];
 
-    std::cout << std::endl;
+    std::cout << RESET << std::endl;
 
     // ソート全体のCPU時間の計測
     // 計測開始
@@ -359,18 +400,18 @@ void PmergeMe::run(int argc, char **argv)
         static_cast<double>(end - start)
         / CLOCKS_PER_SEC * 1000000.0;
     
-    std::cout << "After: ";
+    std::cout << GREEN << "After: ";
 
     for (std::size_t i = 0; i < _vector.size(); ++i)
         std::cout << " " << _vector[i];
 
-    std::cout << std::endl;
+    std::cout << RESET << std::endl;
 
-    std::cout << "Time to process a range of "
+    std::cout << GREEN << "Time to process a range of "
               << _vector.size()
               << " elements with std::vector : "
               << elapsed << " us"
-              << std::endl;
+              << RESET << std::endl;
 }
 
 

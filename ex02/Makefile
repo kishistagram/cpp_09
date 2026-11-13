@@ -11,12 +11,14 @@ endif
 
 SRCS = main.cpp \
 	   PmergeMe.cpp \
-	   ComparisonReport.cpp
+	   ComparisonReport.cpp \
+	   Debug.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
 HEADERS = PmergeMe.hpp \
-		  ComparisonReport.hpp
+		  ComparisonReport.hpp \
+		  Debug.hpp
 
 RM = rm -f
 
