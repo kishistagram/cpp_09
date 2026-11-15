@@ -170,7 +170,7 @@ void PmergeMe::fordJohnsonVector(
     const std::size_t groupCount = data.size() / groupSize;
 
     // debug
-    std::cout << RED << "<<debug>>" << RESET << std::endl;
+    std::cout << RED << "<<debug step1: make pair & swap>>" << RESET << std::endl;
 	std::cout << "[ford-Johnson running..]" << std::endl;
 	std::cout << "groupSize: "
 			  << groupSize << std::endl;
@@ -231,8 +231,12 @@ void PmergeMe::fordJohnsonVector(
     // --------------------------------------------------------
 
 	// debug
-	std::cout << "[RETURN FROM RECURSION] groupSize =" 
+	std::cout << "[RETURN FROM RECURSION..]" << '\n' << std::endl;
+
+	std::cout << RED << "<<debug step2: create main/pending chain >>" RESET << std::endl;
+	std::cout << "groupSize = " 
 			  << groupSize << std::endl;
+	std::cout << "---------------------" << std::endl;
 
     const std::size_t pairCount = groupCount / 2;
     const bool oddGroup = (groupCount % 2) != 0;
@@ -249,13 +253,13 @@ void PmergeMe::fordJohnsonVector(
 
     // Add all a groups to the main chain.
 	// debug
-	std::cout << "added a groups to the main chain" << std::endl;
+	std::cout << "added 'a' groups to the main chain" << std::endl;
     for (std::size_t i = 0; i < pairCount; ++i)
         chain.push_back(2 * i + 1);
 
     // Collect b2, b3, ... as pending.
 	// debug
-	std::cout << "collecetd b as pending" << std::endl;
+	std::cout << "collecetd 'b' as pending" << std::endl;
 
     std::vector<std::size_t> pending;
 

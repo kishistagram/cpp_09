@@ -33,9 +33,6 @@ void debugGroups(
     const std::vector<std::size_t> &pending,
     std::size_t groupSize)
 {
-    std::cerr << "\n[DEBUG] groupSize = "
-              << groupSize << std::endl;
-
-    printGroups("[MAIN CHAIN]", data, chain, groupSize);
-    printGroups("[PENDING]", data, pending, groupSize);
+    printGroups("(MAIN CHAIN)", data, chain, groupSize);
+    printGroups("(PENDING)", data, pending, groupSize);
 }
