@@ -1,15 +1,24 @@
+
 #ifndef DEBUG_HPP
 #define DEBUG_HPP
 
 #include <vector>
 #include <cstddef>
 
-void debugGroups(
+void debugCompareGroups(
     const std::vector<int> &data,
-    const std::vector<std::size_t> &chain,
-    const std::vector<std::size_t> &pending,
-    std::size_t groupSize
-);
+    std::size_t left,
+    std::size_t right,
+    std::size_t groupSize,
+    int leftMax,
+    int rightMax);
+
+void debugSwappedGroups(
+    const std::vector<int> &data,
+    std::size_t left,
+    std::size_t right,
+    std::size_t groupSize);
 
 #endif
+
 

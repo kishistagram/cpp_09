@@ -190,32 +190,53 @@ void PmergeMe::fordJohnsonVector(
         const std::size_t left = p * groupSize;
         const std::size_t right = (p + 1) * groupSize;
 
+    	// Calculate maximum values of both groups.
+    	const int leftMax = groupMax(data, left, groupSize);
+    	const int rightMax = groupMax(data, right, groupSize);
+
 		// debug
-		std::cout << "compare: data[" << left << "] & data[" << right << "]" << std::endl;
+		// std::cout << "compare: data[" << left << "] & data[" << right << "]" << std::endl;
+
+		debugCompareGroups(
+			data,
+			left,
+			right,
+			groupSize,
+			leftMax,
+			rightMax
+		);
 
         if (groupMax(data, left, groupSize) >
             groupMax(data, right, groupSize))
         {
             for (std::size_t k = 0; k < groupSize; ++k)
             {
-				// debug
-				std::cout << "[BEFORE] "
-                		  << data[left + k] << " <-> "
-                  		  << data[right + k] << std::endl;
+				// // debug
+				// std::cout << "[BEFORE] "
+                // 		  << data[left + k] << " <-> "
+                //   		  << data[right + k] << std::endl;
 
                 std::swap(data[left + k],data[right + k]);
 
 				// debug
-        		std::cout << "[AFTER]  "
-                  		  << data[left + k] << " <-> "
-                    	  << data[right + k] << std::endl;
+        		// std::cout << "[AFTER]  "
+                //   		  << data[left + k] << " <-> "
+                //     	  << data[right + k] << std::endl;
+
+        		// Debug: display groups after swapping.
+
             }
+        	debugSwappedGroups(
+            	data,
+            	left,
+            	right,
+            	groupSize);
         }
-		else
-		{
-			// debug
-			std::cout << "[no swap]" << std::endl;
-		}
+		// else
+		// {
+		// 	// debug
+		// 	std::cout << "[no swap]" << std::endl;
+		// }
     }
 
     // --------------------------------------------------------
@@ -275,7 +296,8 @@ void PmergeMe::fordJohnsonVector(
 	}
 
 	//debug
-	debugGroups(data, chain, pending, groupSize);
+	// debugGroups（data, chain, pending, groupSize);
+
 
 
     // --------------------------------------------------------

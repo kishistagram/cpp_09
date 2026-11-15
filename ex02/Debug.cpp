@@ -1,38 +1,67 @@
 #include "Debug.hpp"
 #include <iostream>
+#include <vector>
 
-static void printGroups(
-    const char *label,
+static void printGroup(
     const std::vector<int> &data,
-    const std::vector<std::size_t> &groups,
+    std::size_t start,
     std::size_t groupSize)
 {
-    std::cerr << label << std::endl;
+    std::cout << "[";
 
-    for (std::size_t i = 0; i < groups.size(); ++i)
+    for (std::size_t k = 0; k < groupSize; ++k)
     {
-        const std::size_t id = groups[i];
-
-        std::cerr << "group " << id << ": [";
-
-        for (std::size_t k = 0; k < groupSize; ++k)
-        {
-            if (k != 0)
-                std::cerr << ", ";
-
-            std::cerr << data[id * groupSize + k];
-        }
-
-        std::cerr << "]" << std::endl;
+        if (k != 0)
+            std::cout << ", ";
+        std::cout << data[start + k];
     }
+
+    std::cout << "]";
 }
 
-void debugGroups(
+void debugCompareGroups(
     const std::vector<int> &data,
-    const std::vector<std::size_t> &chain,
-    const std::vector<std::size_t> &pending,
+    std::size_t left,
+    std::size_t right,
+    std::size_t groupSize,
+    int leftMax,
+    int rightMax)
+{
+    std::cout << "[COMPARE GROUPS]" << std::endl;
+
+    std::cout << "left  group: ";
+    printGroup(data, left, groupSize);
+    std::cout << std::endl;
+
+    std::cout << "right group: ";
+    printGroup(data, right, groupSize);
+    std::cout << std::endl;
+
+    std::cout << "compare max: "
+              << leftMax
+              << (leftMax > rightMax ? " > " : " <= ")
+              << rightMax
+              << std::endl;
+
+    std::cout << (leftMax > rightMax
+        ? "[SWAP REQUIRED]"
+        : "[NO SWAP]")
+        << std::endl;
+}
+
+void debugSwappedGroups(
+    const std::vector<int> &data,
+    std::size_t left,
+    std::size_t right,
     std::size_t groupSize)
 {
-    printGroups("(MAIN CHAIN)", data, chain, groupSize);
-    printGroups("(PENDING)", data, pending, groupSize);
+    std::cout << "[AFTER GROUP SWAP]" << std::endl;
+
+    std::cout << "left  group: ";
+    printGroup(data, left, groupSize);
+    std::cout << std::endl;
+
+    std::cout << "right group: ";
+    printGroup(data, right, groupSize);
+    std::cout << std::endl;
 }
