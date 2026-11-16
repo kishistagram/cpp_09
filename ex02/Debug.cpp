@@ -85,6 +85,7 @@ void debugSwappedGroups(
 }
 
 void printMainPendingChain(
+	const std::vector<int> &data,
     std::size_t groupSize,
     std::size_t groupCount,
     const std::vector<std::size_t> &chain,
@@ -105,14 +106,24 @@ void printMainPendingChain(
 
     std::cout << "---------------------" << std::endl;
 
-    std::cout << "[MAIN CHAIN IDs] ";
+    std::cout << "[MAIN CHAIN] ";
     for (std::size_t i = 0; i < chain.size(); ++i)
-        std::cout << chain[i] << " ";
+	{
+		printGroupName(chain[i], groupCount, oddGroup);
+		std::cout << "=";
+		printGroupValues(data, chain[i], groupSize);
+		std::cout << "  ";
+	}
     std::cout << std::endl;
 
-    std::cout << "[PENDING GROUP IDs] ";
+    std::cout << "[PENDING] ";
     for (std::size_t i = 0; i < pending.size(); ++i)
-        std::cout << pending[i] << " ";
+	{
+		printGroupName(pending[i], groupCount, oddGroup);
+    	std::cout << "=";
+		printGroupValues(data, pending[i], groupSize);
+		std::cout << "  ";
+	}
     std::cout << std::endl;
 
     std::cout << "[ODD GROUP] "
@@ -127,15 +138,26 @@ void printMainPendingChain(
 #include <iostream>
 
 void printJacobsthalOrder(
+    const std::vector<int> &data,
     const std::vector<std::size_t> &pending,
-    const std::vector<std::size_t> &order)
+    const std::vector<std::size_t> &order,
+    std::size_t groupSize,
+    std::size_t groupCount,
+    bool oddGroup)
 {
     std::cout << "\n========== STEP 3: JACOBSTHAL =========="
               << std::endl;
 
-    std::cout << "[PENDING GROUP IDs] ";
+    std::cout << "[PENDING GROUPS] ";
     for (std::size_t i = 0; i < pending.size(); ++i)
-        std::cout << pending[i] << " ";
+    {
+        const std::size_t id = pending[i];
+
+        printGroupName(id, groupCount, oddGroup);
+        std::cout << "=";
+        printGroupValues(data, id, groupSize);
+        std::cout << "  ";
+    }
     std::cout << std::endl;
 
     std::cout << "[JACOBSTHAL ORDER] ";
@@ -146,10 +168,82 @@ void printJacobsthalOrder(
     std::cout << "[ACTUAL INSERTION ORDER] ";
     for (std::size_t i = 0; i < order.size(); ++i)
     {
-        std::cout << pending[order[i]] << " ";
+        const std::size_t id = pending[order[i]];
+
+        printGroupName(id, groupCount, oddGroup);
+        std::cout << "=";
+        printGroupValues(data, id, groupSize);
+        std::cout << "  ";
     }
     std::cout << std::endl;
 
     std::cout << "========================================"
               << std::endl;
+}
+
+// void printJacobsthalOrder(
+//     const std::vector<std::size_t> &pending,
+//     const std::vector<std::size_t> &order)
+// {
+//     std::cout << "\n========== STEP 3: JACOBSTHAL =========="
+//               << std::endl;
+
+//     std::cout << "[PENDING GROUP IDs] ";
+//     for (std::size_t i = 0; i < pending.size(); ++i)
+//         std::cout << pending[i] << " ";
+//     std::cout << std::endl;
+
+//     std::cout << "[JACOBSTHAL ORDER] ";
+//     for (std::size_t i = 0; i < order.size(); ++i)
+//         std::cout << order[i] << " ";
+//     std::cout << std::endl;
+
+//     std::cout << "[ACTUAL INSERTION ORDER] ";
+//     for (std::size_t i = 0; i < order.size(); ++i)
+//     {
+//         std::cout << pending[order[i]] << " ";
+//     }
+//     std::cout << std::endl;
+
+//     std::cout << "========================================"
+//               << std::endl;
+// }
+
+void printGroupName(
+    std::size_t id,
+    std::size_t groupCount,
+    bool oddGroup)
+{
+    if (oddGroup && id == groupCount - 1)
+    {
+        std::cout << "straggler";
+    }
+    else if (id % 2 == 0)
+    {
+        std::cout << "b" << (id / 2 + 1);
+    }
+    else
+    {
+        std::cout << "a" << (id / 2 + 1);
+    }
+}
+
+void printGroupValues(
+    const std::vector<int> &data,
+    std::size_t id,
+    std::size_t groupSize)
+{
+    const std::size_t start = id * groupSize;
+
+    std::cout << "[";
+
+    for (std::size_t i = 0; i < groupSize; ++i)
+    {
+        if (i > 0)
+            std::cout << ", ";
+
+        std::cout << data[start + i];
+    }
+
+    std::cout << "]";
 }

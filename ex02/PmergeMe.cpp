@@ -257,7 +257,7 @@ void PmergeMe::fordJohnsonVector(
         pending.push_back(groupCount - 1);
 
 	#ifdef PMERGEME_DEBUG
-		printMainPendingChain(groupSize, groupCount, chain, pending, oddGroup);
+		printMainPendingChain(data, groupSize, groupCount, chain, pending, oddGroup);
 	#endif
 
     // --------------------------------------------------------
@@ -268,7 +268,14 @@ void PmergeMe::fordJohnsonVector(
         generateJacobsthalOrder(pending.size());
 	
 	#ifdef PMERGEME_DEBUG
-	printJacobsthalOrder(pending, order);
+	printJacobsthalOrder(
+        data,
+        pending,
+        order,
+        groupSize,
+        groupCount,
+        oddGroup
+    );
 	#endif
 
     for (std::size_t j = 0; j < order.size(); ++j)
@@ -292,9 +299,7 @@ void PmergeMe::fordJohnsonVector(
             }
 
             if (limit == chain.size())
-                throw std::logic_error(
-                    "lost pair association"
-                );
+                throw std::logic_error("lost pair association");
         }
 
         // Binary search for insertion position.
