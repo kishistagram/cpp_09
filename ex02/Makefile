@@ -6,19 +6,19 @@ CXXFLAGS = -Wall -Wextra -Werror -pedantic-errors -std=c++98
 DEBUG ?= 0
 
 ifeq ($(DEBUG),1)
-	CXXFLAGS += -DPMERGEME_DEBUG
+CXXFLAGS += -DPMERGEME_DEBUG
 endif
 
 SRCS = main.cpp \
-	   PmergeMe.cpp \
-	   ComparisonReport.cpp \
-	   Debug.cpp
+       PmergeMe.cpp \
+       ComparisonReport.cpp \
+       Debug.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
 HEADERS = PmergeMe.hpp \
-		  ComparisonReport.hpp \
-		  Debug.hpp
+          ComparisonReport.hpp \
+          Debug.hpp
 
 RM = rm -f
 
@@ -38,10 +38,7 @@ fclean: clean
 
 re: fclean all
 
-debug: $(MAKE) re DEBUG=1
+debug:
+	$(MAKE) re DEBUG=1
 
-
-.PHONY: all clean fclean re
-
-
-
+.PHONY: all clean fclean re rebug

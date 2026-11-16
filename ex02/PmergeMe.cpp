@@ -169,14 +169,9 @@ void PmergeMe::fordJohnsonVector(
 {
     const std::size_t groupCount = data.size() / groupSize;
 
-    // debug
-    std::cout << RED << "<<debug step1: make pair & swap>>" << RESET << std::endl;
-	std::cout << "[ford-Johnson running..]" << std::endl;
-	std::cout << "groupSize: "
-			  << groupSize << std::endl;
-	std::cout << "groupCount: "
-              << groupCount << std::endl;
-	std::cout << "-------------------------" << std::endl;
+	#ifdef PMERGEME_DEBUG
+	printFordJohnsonStart(groupSize, groupCount);
+	#endif
 
     if (groupCount < 2)
         return;
@@ -190,13 +185,11 @@ void PmergeMe::fordJohnsonVector(
         const std::size_t left = p * groupSize;
         const std::size_t right = (p + 1) * groupSize;
 
+		#ifdef PMERGEME_DEBUG
     	// Calculate maximum values of both groups.
     	const int leftMax = groupMax(data, left, groupSize);
     	const int rightMax = groupMax(data, right, groupSize);
-
-		// debug
 		// std::cout << "compare: data[" << left << "] & data[" << right << "]" << std::endl;
-
 		debugCompareGroups(
 			data,
 			left,
@@ -205,38 +198,23 @@ void PmergeMe::fordJohnsonVector(
 			leftMax,
 			rightMax
 		);
+		#endif
 
         if (groupMax(data, left, groupSize) >
             groupMax(data, right, groupSize))
         {
             for (std::size_t k = 0; k < groupSize; ++k)
             {
-				// // debug
-				// std::cout << "[BEFORE] "
-                // 		  << data[left + k] << " <-> "
-                //   		  << data[right + k] << std::endl;
-
                 std::swap(data[left + k],data[right + k]);
-
-				// debug
-        		// std::cout << "[AFTER]  "
-                //   		  << data[left + k] << " <-> "
-                //     	  << data[right + k] << std::endl;
-
-        		// Debug: display groups after swapping.
-
             }
+			#ifndef PMERGEME_DEBUG
         	debugSwappedGroups(
             	data,
             	left,
             	right,
             	groupSize);
+			#endif
         }
-		// else
-		// {
-		// 	// debug
-		// 	std::cout << "[no swap]" << std::endl;
-		// }
     }
 
     // --------------------------------------------------------
@@ -250,14 +228,6 @@ void PmergeMe::fordJohnsonVector(
     // 3. Return from recursion.
     //    Build main chain and pending groups.
     // --------------------------------------------------------
-
-	// debug
-	std::cout << "[RETURN FROM RECURSION..]" << '\n' << std::endl;
-
-	std::cout << RED << "<<debug step2: create main/pending chain >>" RESET << std::endl;
-	std::cout << "groupSize = " 
-			  << groupSize << std::endl;
-	std::cout << "---------------------" << std::endl;
 
     const std::size_t pairCount = groupCount / 2;
     const bool oddGroup = (groupCount % 2) != 0;
@@ -273,15 +243,10 @@ void PmergeMe::fordJohnsonVector(
     chain.push_back(0);
 
     // Add all a groups to the main chain.
-	// debug
-	std::cout << "added 'a' groups to the main chain" << std::endl;
     for (std::size_t i = 0; i < pairCount; ++i)
         chain.push_back(2 * i + 1);
 
     // Collect b2, b3, ... as pending.
-	// debug
-	std::cout << "collecetd 'b' as pending" << std::endl;
-
     std::vector<std::size_t> pending;
 
     for (std::size_t i = 1; i < pairCount; ++i)
@@ -289,16 +254,11 @@ void PmergeMe::fordJohnsonVector(
 
     // A complete unpaired group is also pending.
     if (oddGroup)
-	{
-		// debug
-		std::cout << "collected unpaired group as pending" << std::endl;
         pending.push_back(groupCount - 1);
-	}
 
-	//debug
-	// debugGroups（data, chain, pending, groupSize);
-
-
+	#ifdef PMERGEME_DEBUG
+		printMainPendingChain(groupSize, groupCount, chain, pending, oddGroup);
+	#endif
 
     // --------------------------------------------------------
     // 4. Insert pending in Jacobsthal order.
@@ -306,6 +266,10 @@ void PmergeMe::fordJohnsonVector(
 
     const std::vector<std::size_t> order =
         generateJacobsthalOrder(pending.size());
+	
+	#ifdef PMERGEME_DEBUG
+	printJacobsthalOrder(pending, order);
+	#endif
 
     for (std::size_t j = 0; j < order.size(); ++j)
     {

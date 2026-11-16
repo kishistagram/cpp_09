@@ -2,6 +2,24 @@
 #include <iostream>
 #include <vector>
 
+void printFordJohnsonStart(
+    std::size_t groupSize,
+    std::size_t groupCount)
+{
+    std::cout << "<<debug step1: make pair & swap>>"
+              << std::endl;
+
+    std::cout << "[ford-Johnson running..]" << std::endl;
+
+    std::cout << "groupSize: "
+              << groupSize << std::endl;
+
+    std::cout << "groupCount: "
+              << groupCount << std::endl;
+
+    std::cout << "-------------------------" << std::endl;
+}
+
 static void printGroup(
     const std::vector<int> &data,
     std::size_t start,
@@ -64,4 +82,74 @@ void debugSwappedGroups(
     std::cout << "right group: ";
     printGroup(data, right, groupSize);
     std::cout << std::endl;
+}
+
+void printMainPendingChain(
+    std::size_t groupSize,
+    std::size_t groupCount,
+    const std::vector<std::size_t> &chain,
+    const std::vector<std::size_t> &pending,
+    bool oddGroup)
+{
+    std::cout << "\n[RETURN FROM RECURSION..]"
+              << std::endl;
+
+    std::cout << "<<debug step2: create main/pending chain >>"
+              << std::endl;
+
+    std::cout << "groupSize: "
+              << groupSize << std::endl;
+
+    std::cout << "groupCount: "
+              << groupCount << std::endl;
+
+    std::cout << "---------------------" << std::endl;
+
+    std::cout << "[MAIN CHAIN IDs] ";
+    for (std::size_t i = 0; i < chain.size(); ++i)
+        std::cout << chain[i] << " ";
+    std::cout << std::endl;
+
+    std::cout << "[PENDING GROUP IDs] ";
+    for (std::size_t i = 0; i < pending.size(); ++i)
+        std::cout << pending[i] << " ";
+    std::cout << std::endl;
+
+    std::cout << "[ODD GROUP] "
+              << (oddGroup ? "YES" : "NO")
+              << std::endl;
+
+    std::cout << "========================================"
+              << std::endl;
+}
+
+#include "Debug.hpp"
+#include <iostream>
+
+void printJacobsthalOrder(
+    const std::vector<std::size_t> &pending,
+    const std::vector<std::size_t> &order)
+{
+    std::cout << "\n========== STEP 3: JACOBSTHAL =========="
+              << std::endl;
+
+    std::cout << "[PENDING GROUP IDs] ";
+    for (std::size_t i = 0; i < pending.size(); ++i)
+        std::cout << pending[i] << " ";
+    std::cout << std::endl;
+
+    std::cout << "[JACOBSTHAL ORDER] ";
+    for (std::size_t i = 0; i < order.size(); ++i)
+        std::cout << order[i] << " ";
+    std::cout << std::endl;
+
+    std::cout << "[ACTUAL INSERTION ORDER] ";
+    for (std::size_t i = 0; i < order.size(); ++i)
+    {
+        std::cout << pending[order[i]] << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "========================================"
+              << std::endl;
 }
